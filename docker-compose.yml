@@ -1,0 +1,39 @@
+# version: "3.8"
+# services:
+#   backend:
+#      build: .
+#      ports:
+#       - "8000:8000"
+
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+    container_name: laravel_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - laravel
+
+  db:
+    image: mysql:5.7
+    container_name: laravel_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: dockerize_laravel
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "3307:3306"
+    networks:
+      - laravel
+
+networks:
+  laravel:
+    driver: bridge
+
